@@ -2,3 +2,5 @@
 Is there life on Mars?;Science doesn't know this yet%true|Certainly. The red UFO is from Mars. And green is from Venus%false|Absolutely not%false
 How should resources be loaded form jar in Java?;ClassLoader#geResourceAsStream or ClassPathResource#getInputStream%true|ClassLoader#geResource#getFile + FileReader%false|Wingardium Leviosa%false
 Which option is a good way to handle the exception?;@SneakyThrow%false|e.printStackTrace()%false|Rethrow with wrapping in business exception (for example, QuestionReadException)%true|Ignoring exception%false
+Which interface provides methods to traverse through a collection?;Iterator%true|Enumerator%false
+What does the transient keyword indicate in a Java class?;The variable can change over time%false|The variable cannot be serialized%true|The variable is volatile%false

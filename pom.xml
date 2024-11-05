@@ -9,8 +9,4 @@
     <artifactId>2024-09-otus-spring-Kutlugildina</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <modules>
-        <module>hw01</module>
-    </modules>
-
 </project>
