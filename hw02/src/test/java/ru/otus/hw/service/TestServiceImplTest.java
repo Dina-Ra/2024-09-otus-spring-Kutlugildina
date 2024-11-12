@@ -49,25 +49,6 @@ public class TestServiceImplTest {
         assertEquals(Collections.emptyList(), testResult.getAnsweredQuestions());
     }
 
-    @DisplayName("empty list of answer")
-    @Test
-    void emptyListAnswer() {
-        var student = new Student("Firstname", "Lastname");
-
-        var question = new Question("question", Collections.emptyList());
-        var questionList = List.of(question);
-
-        given(questionDao.findAll()).willReturn(questionList);
-
-        var testResult = testService.executeTestFor(student);
-
-        verify(ioService, times(1)).printFormattedLine("Please answer the questions below%n");
-
-        assertEquals(student, testResult.getStudent());
-        assertEquals(0, testResult.getRightAnswersCount());
-        assertEquals(Collections.emptyList(), testResult.getAnsweredQuestions());
-    }
-
     @DisplayName("list of one question")
     @ParameterizedTest
     @CsvSource({"1,0", "3,0", "2,1"})
@@ -92,14 +73,14 @@ public class TestServiceImplTest {
         assertEquals(questionList, testResult.getAnsweredQuestions());
 
         verify(ioService, times(1)).printLine(question.text());
-        verify(ioService, times(1)).printFormattedLine(
-                "1. %s%n2. %s%n3. %s%n", answerList.stream().map(Answer::text).toArray()
+        verify(ioService, times(1)).printLine(
+                String.format("1. %s%n2. %s%n3. %s%n", answerList.stream().map(Answer::text).toArray())
         );
     }
 
-    @DisplayName("thrown exception while reading int")
+    @DisplayName("one question and thrown exception while reading int")
     @Test
-    void throwExceptionReadingInt() {
+    void oneQuestionList_throwExceptionReadingInt() {
         var student = new Student("Firstname", "Lastname");
 
         var answer1 = new Answer("answer1", false);
@@ -109,7 +90,7 @@ public class TestServiceImplTest {
         var questionList = List.of(question);
 
         given(questionDao.findAll()).willReturn(questionList);
-        given(ioService.readIntForRangeWithPrompt(1, answerList.size(), String.format(PROMPT, 3), String.format(ERROR_MESSAGE, 3)))
+        given(ioService.readIntForRangeWithPrompt(1, answerList.size(), String.format(PROMPT, 2), String.format(ERROR_MESSAGE, 2)))
                 .willThrow(IllegalArgumentException.class);
 
         var testResult = testService.executeTestFor(student);
@@ -119,8 +100,8 @@ public class TestServiceImplTest {
         assertEquals(questionList, testResult.getAnsweredQuestions());
 
         verify(ioService, times(1)).printLine(question.text());
-        verify(ioService, times(1)).printFormattedLine(
-                "1. %s%n2. %s%n3. %s%n", answerList.stream().map(Answer::text).toArray()
+        verify(ioService, times(1)).printLine(
+                String.format("1. %s%n2. %s%n", answerList.stream().map(Answer::text).toArray())
         );
     }
 }

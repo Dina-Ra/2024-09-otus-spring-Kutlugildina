@@ -1,6 +1,6 @@
 package ru.otus.hw.dao;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw.config.TestFileNameProvider;
@@ -27,8 +27,8 @@ public class CsvQuestionDaoTest {
         List<Question> questions = questionDao.findAll();
 
         verify(fileNameProvider, times(1)).getTestFileName();
-        assertEquals(4, questions.size());
-        assertNull(questions.get(3).answers());
+        assertEquals(3, questions.size());
+        assertFalse(CollectionUtils.isEmpty(questions.get(2).answers()));
     }
 
     @DisplayName("throwable exception file not found")

@@ -1,6 +1,7 @@
 package ru.otus.hw.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.CsvToBeanFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.config.TestFileNameProvider;
@@ -34,15 +35,24 @@ public class CsvQuestionDao implements QuestionDao {
                     .withType(QuestionDto.class)
                     .withSeparator(';')
                     .withSkipLines(1)
+                    .withFilter(createCsvToBeanFilter())
                     .build()
                     .parse();
 
             return questions.stream()
                     .map(QuestionDto::toDomainObject)
                     .collect(Collectors.toList());
-
         } catch (Exception e) {
             throw new QuestionReadException(e.getMessage(), e);
         }
+    }
+
+    private CsvToBeanFilter createCsvToBeanFilter() {
+        return new CsvToBeanFilter() {
+            @Override
+            public boolean allowLine(String[] strings) {
+                return strings.length > 1;
+            }
+        };
     }
 }
