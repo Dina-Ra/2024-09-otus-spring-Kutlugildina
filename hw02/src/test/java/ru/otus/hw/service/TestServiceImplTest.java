@@ -78,9 +78,9 @@ public class TestServiceImplTest {
         );
     }
 
-    @DisplayName("one question and thrown exception while reading int")
+    @DisplayName("the answer should not be counted if entered unreachable option")
     @Test
-    void oneQuestionList_throwExceptionReadingInt() {
+    void theAnswerShouldNotBeCountedIfEnteredUnreachableOption() {
         var student = new Student("Firstname", "Lastname");
 
         var answer1 = new Answer("answer1", false);
