@@ -2,16 +2,12 @@ package ru.otus.hw.config;
 
 import lombok.Setter;
 import lombok.Getter;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 import java.util.Map;
 
-@EnableAutoConfiguration
 @ConfigurationProperties(prefix = "test")
-@Component
 @Setter
 public class AppProperties implements TestConfig, TestFileNameProvider, LocaleConfig {
 

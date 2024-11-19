@@ -2,12 +2,13 @@ package ru.otus.hw;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.PropertySource;
+import ru.otus.hw.config.AppProperties;
 import ru.otus.hw.service.TestRunnerService;
 
+@EnableConfigurationProperties(AppProperties.class)
 @SpringBootApplication
-@PropertySource("classpath:application.yml")
 public class Application {
     public static void main(String[] args) {
 
