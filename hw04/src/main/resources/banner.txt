@@ -1,0 +1,10 @@
+${AnsiColor.196}        o                        o    o                                                                 o           o
+${AnsiColor.197}       <|>                      <|>  <|>                                                               <|>         <|>
+${AnsiColor.198}       / >                      / \  / \                                                               / \         < \
+${AnsiColor.199}       \o__ __o      o__  __o   \o/  \o/    o__ __o         o              o     o__ __o    \o__ __o   \o/    o__ __o/
+${AnsiColor.200}        |     v\    /v      |>   |    |    /v     v\       <|>            <|>   /v     v\    |     |>   |    /v     |
+${AnsiColor.201}       / \     <\  />      //   / \  / \  />       <\      < >            < >  />       <\  / \   < >  / \  />     / \
+${AnsiColor.206}       \o/     o/  \o    o/     \o/  \o/  \         /       \o    o/\o    o/   \         /  \o/        \o/  \      \o/
+${AnsiColor.207}        |     <|    v\  /v __o   |    |    o       o         v\  /v  v\  /v     o       o    |          |    o      |
+${AnsiColor.213}       / \    / \    <\/> __/>  / \  / \   <\__ __/>          <\/>    <\/>      <\__ __/>   / \        / \   <\__  / \
+${AnsiColor.DEFAULT}
