@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
-import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
 import java.util.List;
@@ -21,13 +20,13 @@ public class TestServiceImpl implements TestService {
     private final QuestionDao questionDao;
 
     @Override
-    public TestResult executeTestFor(Student student) {
+    public TestResult executeTestFor() {
         ioService.printLine("");
         ioService.printLineLocalized("TestService.answer.the.questions");
         ioService.printLine("");
 
         var questions = questionDao.findAll();
-        var testResult = new TestResult(student);
+        var testResult = new TestResult();
 
         for (var question: questions) {
             var isAnswerValid = getIsCorrectAnswerQuestion(question);

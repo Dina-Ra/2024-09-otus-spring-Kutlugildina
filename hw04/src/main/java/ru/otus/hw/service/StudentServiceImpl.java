@@ -3,7 +3,6 @@ package ru.otus.hw.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import ru.otus.hw.domain.Student;
 
 import java.util.Objects;
 
@@ -11,7 +10,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private Student student;
+    private String fullName;
 
     private final LocalizedIOService ioService;
 
@@ -21,20 +20,21 @@ public class StudentServiceImpl implements StudentService {
         var lastName = ioService.readStringWithPromptLocalized("StudentService.input.last.name");
 
         if (StringUtils.isNotBlank(firstName) && StringUtils.isNotBlank(lastName)) {
-            student = new Student(firstName, lastName);
-            return ioService.getMessage("StudentService.determine.current.student.success", student.getFullName());
+            this.fullName = String.format("%s %s", firstName, lastName);
+
+            return ioService.getMessage("StudentService.determine.current.student.success", this.fullName);
         }
         return ioService.getMessage("StudentService.determine.current.student.field");
     }
 
     @Override
     public String isDetermineStudentResult() {
-        return Objects.nonNull(student) ?
+        return Objects.nonNull(this.fullName) ?
                 StringUtils.EMPTY : ioService.getMessage("StudentService.determine.current.student.field");
     }
 
     @Override
-    public Student getCurrentStudent() {
-        return student;
+    public String getCurrentStudentFullName() {
+        return this.fullName;
     }
 }

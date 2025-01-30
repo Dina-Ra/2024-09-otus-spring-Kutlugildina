@@ -1,6 +1,5 @@
 package ru.otus.hw.service;
 
-import ru.otus.hw.domain.Student;
 
 public interface StudentService {
 
@@ -8,5 +7,5 @@ public interface StudentService {
 
     String isDetermineStudentResult();
 
-    Student getCurrentStudent();
+    String getCurrentStudentFullName();
 }

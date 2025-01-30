@@ -13,12 +13,14 @@ public class ResultServiceImpl implements ResultService {
 
     private final LocalizedIOService ioService;
 
+    private final StudentService studentService;
+
     @Override
     public void showResult(TestResult testResult) {
         ioService.printLine("");
         ioService.printLineLocalized("ResultService.test.results");
         ioService.printFormattedLineLocalized("ResultService.student",
-                testResult.getStudent().getFullName());
+                studentService.getCurrentStudentFullName());
         ioService.printFormattedLineLocalized("ResultService.answered.questions.count",
                 testResult.getAnsweredQuestions().size());
         ioService.printFormattedLineLocalized("ResultService.right.answers.count",

@@ -12,9 +12,9 @@ import ru.otus.hw.service.StudentService;
 import ru.otus.hw.service.TestService;
 
 @Order
-@ShellComponent(value = "Application Events Commands")
+@ShellComponent(value = "Students Testing Commands")
 @RequiredArgsConstructor
-public class ApplicationEventsCommands {
+public class StudentsTestingCommands {
 
     private final TestService testService;
 
@@ -30,8 +30,7 @@ public class ApplicationEventsCommands {
     @ShellMethod(value = "Answer the questions", key = {"a", "answer"})
     @ShellMethodAvailability(value = "isAnswerTheQuestionsCommandAvailable")
     public void answerTheQuestions() {
-        var student = studentService.getCurrentStudent();
-        var testResult = testService.executeTestFor(student);
+        var testResult = testService.executeTestFor();
         resultService.showResult(testResult);
     }
 
