@@ -23,7 +23,7 @@ public class StudentsTestingCommands {
     private final ResultService resultService;
 
     @ShellMethod(value = "Input name", key = {"n", "name"})
-    public String getStudentName() {
+    public String determineCurrentStudent() {
         return studentService.determineCurrentStudentResult();
     }
 

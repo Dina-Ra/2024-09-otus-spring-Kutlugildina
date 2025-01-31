@@ -8,9 +8,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
@@ -24,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = TestServiceImpl.class)
 public class TestServiceImplTest {
 
     @MockBean
@@ -35,15 +32,6 @@ public class TestServiceImplTest {
 
     @Autowired
     private TestServiceImpl testService;
-
-    @Configuration
-    static class TestServiceImplConfiguration {
-
-        @Bean
-        TestService testService(LocalizedIOService ioService, QuestionDao questionDao) {
-            return new TestServiceImpl(ioService, questionDao);
-        }
-    }
 
     @BeforeEach
     void setUp() {

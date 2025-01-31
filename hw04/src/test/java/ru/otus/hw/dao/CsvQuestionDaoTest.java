@@ -6,14 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
-import ru.otus.hw.service.LocalizedIOService;
-import ru.otus.hw.service.TestService;
-import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.List;
 
@@ -21,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = CsvQuestionDao.class)
 public class CsvQuestionDaoTest {
 
     @MockBean
@@ -29,15 +24,6 @@ public class CsvQuestionDaoTest {
 
     @Autowired
     private QuestionDao questionDao;
-
-    @Configuration
-    static class CsvQuestionDaoConfiguration {
-
-        @Bean
-        QuestionDao questionDao(TestFileNameProvider fileNameProvider) {
-            return new CsvQuestionDao(fileNameProvider);
-        }
-    }
 
     @DisplayName("need to get questions with answers to them")
     @Test
