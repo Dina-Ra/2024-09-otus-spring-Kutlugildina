@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      settings.web-allow-others: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-test.yaml
+    enabled: true
+    user: sa
+    password:
