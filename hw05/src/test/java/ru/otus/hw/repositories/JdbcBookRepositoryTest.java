@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({JdbcBookRepository.class, JdbcGenreRepository.class})
 class JdbcBookRepositoryTest {
 

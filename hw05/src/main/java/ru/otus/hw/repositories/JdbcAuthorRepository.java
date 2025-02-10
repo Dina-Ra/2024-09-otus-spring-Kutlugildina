@@ -25,7 +25,11 @@ public class JdbcAuthorRepository implements AuthorRepository {
     @Override
     public Optional<Author> findById(long id) {
         var parameters = new MapSqlParameterSource("id", id);
-        return Optional.ofNullable(namedParameterJdbcOperations.queryForObject("select id, full_name from authors where id=:id", parameters, new AuthorRowMapper()));
+        return Optional.ofNullable(namedParameterJdbcOperations.queryForObject(
+                "select id, full_name from authors where id=:id",
+                parameters,
+                new AuthorRowMapper()
+        ));
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {
