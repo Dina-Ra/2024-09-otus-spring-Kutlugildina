@@ -9,7 +9,6 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -38,7 +37,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> findByBookId(Long bookId) {
         return commentRepository.findByBookId(bookId).stream()
-                .filter(comment -> Objects.deepEquals(bookId, comment.getBook().getId()))
                 .map(comment -> new CommentDto(comment.getId(), comment.getText()))
                 .toList();
     }

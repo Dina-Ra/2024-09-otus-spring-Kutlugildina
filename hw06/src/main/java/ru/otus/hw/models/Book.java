@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,8 @@ import static java.util.Objects.nonNull;
 @ToString(exclude = {"genres", "author"})
 @Entity
 @Table(name = "books")
+@NamedEntityGraph(name = "author-entity-graph",
+        attributeNodes = {@NamedAttributeNode("author")})
 public class Book {
 
     @Id

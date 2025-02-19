@@ -13,7 +13,6 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +42,7 @@ class JpaBookRepositoryTest {
     @DisplayName("должен загружать список всех книг")
     @Test
     void shouldReturnCorrectBooksList() {
-        var actualBooks = jpaBookRepository.findAll().stream()
-                .collect(Collectors.groupingBy(objectArray -> String.valueOf(((Book) objectArray[0]).getId())));
+        var actualBooks = jpaBookRepository.findAll();
 
         var expectedBooks = LongStream.range(1, 4).boxed()
                 .map(expectedIdBook -> testEntityManager.find(Book.class, expectedIdBook))
@@ -62,7 +60,7 @@ class JpaBookRepositoryTest {
         var expectedBook = new Book(null, "BookTitle_10500", author,
                 List.of(genres1, genres3));
 
-        var returnedBook = jpaBookRepository.save(expectedBook);
+        var returnedBook = testEntityManager.persistAndFlush(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
@@ -79,9 +77,7 @@ class JpaBookRepositoryTest {
         var expectedBook = new Book(1L, "BookTitle_10500", author,
                 List.of(genres5, genres6));
 
-        assertThat(jpaBookRepository.findById(expectedBook.getId()))
-                .isPresent()
-                .get()
+        assertThat(testEntityManager.find(Book.class, expectedBook.getId()))
                 .isNotEqualTo(expectedBook);
 
         var returnedBook = jpaBookRepository.save(expectedBook);

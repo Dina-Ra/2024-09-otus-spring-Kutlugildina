@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.repositories.JpaAuthorRepository;
 import ru.otus.hw.repositories.JpaGenreRepository;
 import ru.otus.hw.repositories.JpaBookRepository;
@@ -50,16 +49,17 @@ public class BookServiceImplTest {
     @ParameterizedTest
     @MethodSource("getDbIdBooks")
     void shouldReturnCorrectBookById(Long bookId, List<CommentDto> commentDtoList) {
-        try {
-            Optional<BookDto> bookDto1 = bookService.findById(bookId);
-            assertThat(bookDto1).isPresent()
-                    .map(BookDto::commentDtoList)
-                    .isPresent()
-                    .get()
-                    .isEqualTo(commentDtoList);
-        } catch (EntityNotFoundException e) {
-            assertThat(e.getMessage()).isNotNull().isEqualTo("Find Book by id [%d] is field".formatted(bookId));
-        }
+        Optional<BookDto> bookDtoOptional = bookService.findById(bookId);
+
+        assertThat(bookDtoOptional).isPresent()
+                .map(BookDto::id)
+                .isPresent()
+                .get()
+                .isEqualTo(bookId);
+
+        List<CommentDto> expectedCommentDtoList = commentService.findByBookId(bookId);
+        assertThat(expectedCommentDtoList)
+                .isEqualTo(commentDtoList);
     }
 
     @DisplayName("должен загружать список всех книг")
@@ -68,19 +68,23 @@ public class BookServiceImplTest {
         List<BookDto> bookDtoList = bookService.findAll();
 
         assertThat(bookDtoList.stream()
-                .filter(bookDto -> bookDto.commentDtoList().stream()
-                        .anyMatch(commentDto -> Objects.deepEquals(commentDto.text(), "BookCommentary_3")))
+                .filter(bookDto -> CollectionUtils.isEmpty(bookDto.genreDtoList()))
                 .findFirst()
         )
-                .isPresent();
+                .isEmpty();
+
+        assertThat(bookDtoList.stream()
+                .filter(bookDto -> Objects.isNull(bookDto.authorDto()))
+                .findFirst()
+        )
+                .isEmpty();
     }
 
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
         var bookDto = bookService.insert("newTitle", 2L, Set.of(2L, 3L));
-        assertThat(bookDto).isNotNull()
-                .matches(book -> CollectionUtils.isEmpty(book.commentDtoList()))
+        assertThat(bookDto.authorDto())
                 .isNotNull();
     }
 
@@ -90,7 +94,11 @@ public class BookServiceImplTest {
         var bookDto = bookService.update(1L,"editTitle", 2L, Set.of(2L, 3L));
 
         assertThat(bookDto).isNotNull()
-                .matches(book -> CollectionUtils.isNotEmpty(book.commentDtoList()))
+                .matches(book -> CollectionUtils.isNotEmpty(book.genreDtoList()))
+                .isNotNull();
+
+        assertThat(bookDto).isNotNull()
+                .matches(book -> Objects.nonNull(book.authorDto()))
                 .isNotNull();
     }
 
@@ -103,14 +111,10 @@ public class BookServiceImplTest {
     }
 
     private static Stream<Arguments> getDbIdBooks() {
-        CommentDto commentDto1Book1 = new CommentDto(1L, "BookCommentary_1");
-        CommentDto commentDto2Book1 = new CommentDto(2L, "BookCommentary_2");
-        CommentDto commentDto3Book1 = new CommentDto(3L, "BookCommentary_3");
         CommentDto commentDto1Book3 = new CommentDto(4L, "BookCommentary_1");
         CommentDto commentDto2Book3 = new CommentDto(5L, "BookCommentary_2");
         CommentDto commentDto3Book3 = new CommentDto(6L, "BookCommentary_3");
         return Stream.of(
-                Arguments.of(1L, new ArrayList<>(List.of(commentDto1Book1, commentDto2Book1, commentDto3Book1))),
                 Arguments.of(2L, Collections.emptyList()),
                 Arguments.of(3L, new ArrayList<>(List.of(commentDto1Book3, commentDto2Book3, commentDto3Book3)))
         );

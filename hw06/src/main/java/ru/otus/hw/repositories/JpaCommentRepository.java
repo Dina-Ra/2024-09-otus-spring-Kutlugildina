@@ -25,7 +25,7 @@ public class JpaCommentRepository implements CommentRepository {
     @Override
     public List<Comment> findByBookId(Long bookId) {
         var query = entityManager.createQuery(
-                "select e from Comment e left join fetch e.book where e.book.id=:bookId",
+                "select e from Comment e where e.book.id=:bookId",
                 Comment.class);
         query.setParameter("bookId", bookId);
         return query.getResultList();
@@ -41,8 +41,6 @@ public class JpaCommentRepository implements CommentRepository {
         } else {
             comment = entityManager.merge(commentClone);
         }
-
-        entityManager.flush();
         return comment;
     }
 }

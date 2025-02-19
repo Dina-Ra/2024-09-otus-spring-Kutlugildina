@@ -5,24 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
-import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.Objects;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RequiredArgsConstructor
@@ -35,8 +28,6 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    private final CommentService commentService;
-
     @Transactional(readOnly = true)
     @Override
     public Optional<BookDto> findById(Long id) {
@@ -46,40 +37,17 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = bookOptional.get();
-        var commentDtoList = commentService.findByBookId(id);
-
-        return Optional.of(generateBookDto(book, commentDtoList));
+        return Optional.of(generateBookDto(book));
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<BookDto> findAll() {
-        var objectListMap = bookRepository.findAll().stream()
-                .collect(Collectors.groupingBy(objectArray -> String.valueOf(((Book) objectArray[0]).getId())));
+        var bookList = bookRepository.findAll();
 
-        return objectListMap.values().stream()
-                .map(this::generateBookDtoMap)
-                .filter(Objects::nonNull)
+        return bookList.stream()
+                .map(this::generateBookDto)
                 .toList();
-    }
-
-    private BookDto generateBookDtoMap(List<Object[]> listObjectArray) {
-        Book book = null;
-        List<CommentDto> commentDtoList = new ArrayList<>();
-
-        for (Object[] objectArray : listObjectArray) {
-            for (Object o : objectArray) {
-                if (o instanceof Book && isNull(book)) {
-                    book = (Book) o;
-                    continue;
-                }
-                if (o instanceof Comment comment) {
-                    var commentDto = new CommentDto(comment.getId(), comment.getText());
-                    commentDtoList.add(commentDto);
-                }
-            }
-        }
-        return nonNull(book) ? generateBookDto(book, commentDtoList) : null;
     }
 
     @Transactional
@@ -113,12 +81,10 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = bookRepository.save(new Book(id, title, author, genres));
-        List<CommentDto> commentDtoList = commentService.findByBookId(book.getId());
-
-        return generateBookDto(book, commentDtoList);
+        return generateBookDto(book);
     }
 
-    private BookDto generateBookDto(Book book, List<CommentDto> commentDtoList) {
+    private BookDto generateBookDto(Book book) {
         var authorDto = new AuthorDto(book.getAuthor().getId(), book.getAuthor().getFullName());
 
         var genres = book.getGenres()
@@ -126,6 +92,6 @@ public class BookServiceImpl implements BookService {
                 .map(genre -> new GenreDto(genre.getId(), genre.getName()))
                 .toList();
 
-        return new BookDto(book.getId(), book.getTitle(), authorDto, genres, commentDtoList);
+        return new BookDto(book.getId(), book.getTitle(), authorDto, genres);
     }
 }

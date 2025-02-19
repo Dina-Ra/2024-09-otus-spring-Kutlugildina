@@ -1,10 +1,12 @@
 package ru.otus.hw.repositories;
 
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 
@@ -18,27 +20,20 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(Long id) {
-        var query = entityManager.createQuery(
-                "select distinct e from Book e left join fetch e.author where e.id=:id",
-                Book.class);
-        query.setParameter("id", id);
-        try {
-            var book = query.getSingleResult();
-            if (isNull(book)) {
-                return Optional.empty();
-            }
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("author-entity-graph");
+        Map<String, Object> properties = Map.of("javax.persistence.fetchgraph", entityGraph);
 
-            return Optional.of(book);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(entityManager.find(Book.class, id, properties));
     }
 
     @Override
-    public List<Object[]> findAll() {
-       var query = entityManager.createQuery("select distinct e,c from Book e " +
-               "left join fetch e.author " +
-               "left join fetch Comment c on c.book.id=e.id");
+    public List<Book> findAll() {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("author-entity-graph");
+        var query = entityManager.createQuery(
+                "select distinct e from Book e left join fetch e.author",
+                Book.class);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
+
         return query.getResultList();
     }
 
@@ -52,7 +47,6 @@ public class JpaBookRepository implements BookRepository {
             book = entityManager.merge(bookClone);
         }
 
-        entityManager.flush();
         return book;
     }
 

@@ -5,6 +5,5 @@ import java.util.List;
 public record BookDto(long id,
                       String title,
                       AuthorDto authorDto,
-                      List<GenreDto> genreDtoList,
-                      List<CommentDto> commentDtoList) {
+                      List<GenreDto> genreDtoList) {
 }
