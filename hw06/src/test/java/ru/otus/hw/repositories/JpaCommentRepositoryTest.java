@@ -37,6 +37,21 @@ public class JpaCommentRepositoryTest {
         assertThat(testEntityManager.find(Comment.class, returnedComment.getId())).isEqualTo(returnedComment);
     }
 
+    @DisplayName("должен обновить комментарий по id")
+    @Test
+    void shouldUpdateCommentById() {
+        var book = testEntityManager.find(Book.class, 1L);
+        var expectedComment = new Comment(1L, "EditBookCommentary_1", book);
+
+        var returnedComment = jpaCommentRepository.save(expectedComment);
+
+        assertThat(returnedComment).isNotNull()
+                .matches(comment -> comment.getId() > 0)
+                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
+
+        assertThat(testEntityManager.find(Comment.class, returnedComment.getId())).isEqualTo(returnedComment);
+    }
+
     @DisplayName("должен загружать комментарий по id")
     @Test
     void shouldReturnCorrectCommentById() {
@@ -60,5 +75,15 @@ public class JpaCommentRepositoryTest {
                 .toList();
 
         assertThat(actualCommentList).containsExactlyElementsOf(expectedCommentList);
+    }
+
+    @DisplayName("должен удалить комментарий по id")
+    @Test
+    void shouldDeleteCommentById() {
+        var comment = testEntityManager.find(Comment.class, 1L);
+        jpaCommentRepository.deleteById(comment.getId());
+
+        var expectedComment = testEntityManager.find(Comment.class, comment.getId());
+        assertThat(expectedComment).isNull();
     }
 }
