@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @DisplayName("Сервис на для работы с книгами ")
@@ -106,8 +107,11 @@ public class BookServiceImplTest {
     @Test
     void shouldDeleteBook() {
         bookService.deleteById(1L);
-        List<CommentDto> commentDtoList = commentService.findByBookId(1L);
-        assertThat(commentDtoList).isEmpty();
+        Throwable throwable = assertThrows(IllegalArgumentException.class,
+                () -> commentService.findByBookId(1L));
+        assertThat(throwable)
+                .message()
+                .isEqualTo("Comments find by book_id [1] is field. Book is not found");
     }
 
     private static Stream<Arguments> getDbIdBooks() {

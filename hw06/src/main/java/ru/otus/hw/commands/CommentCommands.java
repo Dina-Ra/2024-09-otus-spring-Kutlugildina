@@ -34,8 +34,21 @@ public class CommentCommands {
 
     // cins BookCommentary_1 1
     @ShellMethod(value = "Insert comment", key = "cins")
-    public String insertBook(String text, Long bookId) {
-        var savedComment = commentService.save(text, bookId);
+    public String insertComment(String text, Long bookId) {
+        var savedComment = commentService.insert(text, bookId);
         return commentConverter.commentToString(savedComment);
+    }
+
+    // cupd 1 EditBookCommentary_1 1
+    @ShellMethod(value = "Update comment", key = "cupd")
+    public String updateComment(Long commentId, String text, Long bookId) {
+        var savedComment = commentService.update(commentId, text, bookId);
+        return commentConverter.commentToString(savedComment);
+    }
+
+    // cdel 1
+    @ShellMethod(value = "Delete comment by id", key = "cdel")
+    public void deleteComment(Long commentId) {
+        commentService.deleteById(commentId);
     }
 }

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.List;
 
 import static java.util.Objects.isNull;
+import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class JpaBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(Long id) {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("author-entity-graph");
-        Map<String, Object> properties = Map.of("javax.persistence.fetchgraph", entityGraph);
+        Map<String, Object> properties = Map.of(FETCH.getKey(), entityGraph);
 
         return Optional.ofNullable(entityManager.find(Book.class, id, properties));
     }
@@ -32,7 +33,7 @@ public class JpaBookRepository implements BookRepository {
         var query = entityManager.createQuery(
                 "select distinct e from Book e left join fetch e.author",
                 Book.class);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
+        query.setHint(FETCH.getKey(), entityGraph);
 
         return query.getResultList();
     }
