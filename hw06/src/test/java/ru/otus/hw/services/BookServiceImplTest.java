@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-@DisplayName("Сервис на для работы с книгами ")
+@DisplayName("Сервис для работы с книгами ")
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @Import({JpaAuthorRepository.class, JpaGenreRepository.class, JpaBookRepository.class,
@@ -50,7 +50,7 @@ public class BookServiceImplTest {
     @ParameterizedTest
     @MethodSource("getDbIdBooks")
     void shouldReturnCorrectBookById(Long bookId, List<CommentDto> commentDtoList) {
-        Optional<BookDto> bookDtoOptional = bookService.findById(bookId);
+        var bookDtoOptional = bookService.findById(bookId);
 
         assertThat(bookDtoOptional).isPresent()
                 .map(BookDto::id)
@@ -58,7 +58,7 @@ public class BookServiceImplTest {
                 .get()
                 .isEqualTo(bookId);
 
-        List<CommentDto> expectedCommentDtoList = commentService.findByBookId(bookId);
+        var expectedCommentDtoList = commentService.findByBookId(bookId);
         assertThat(expectedCommentDtoList)
                 .isEqualTo(commentDtoList);
     }
@@ -66,7 +66,7 @@ public class BookServiceImplTest {
     @DisplayName("должен загружать список всех книг")
     @Test
     void shouldReturnCorrectBooksList() {
-        List<BookDto> bookDtoList = bookService.findAll();
+        var bookDtoList = bookService.findAll();
 
         assertThat(bookDtoList.stream()
                 .filter(bookDto -> CollectionUtils.isEmpty(bookDto.genreDtoList()))
@@ -107,7 +107,7 @@ public class BookServiceImplTest {
     @Test
     void shouldDeleteBook() {
         bookService.deleteById(1L);
-        Throwable throwable = assertThrows(IllegalArgumentException.class,
+        var throwable = assertThrows(IllegalArgumentException.class,
                 () -> commentService.findByBookId(1L));
         assertThat(throwable)
                 .message()
@@ -115,9 +115,9 @@ public class BookServiceImplTest {
     }
 
     private static Stream<Arguments> getDbIdBooks() {
-        CommentDto commentDto1Book3 = new CommentDto(4L, "BookCommentary_1");
-        CommentDto commentDto2Book3 = new CommentDto(5L, "BookCommentary_2");
-        CommentDto commentDto3Book3 = new CommentDto(6L, "BookCommentary_3");
+        var commentDto1Book3 = new CommentDto(4L, "BookCommentary_1");
+        var commentDto2Book3 = new CommentDto(5L, "BookCommentary_2");
+        var commentDto3Book3 = new CommentDto(6L, "BookCommentary_3");
         return Stream.of(
                 Arguments.of(2L, Collections.emptyList()),
                 Arguments.of(3L, new ArrayList<>(List.of(commentDto1Book3, commentDto2Book3, commentDto3Book3)))
