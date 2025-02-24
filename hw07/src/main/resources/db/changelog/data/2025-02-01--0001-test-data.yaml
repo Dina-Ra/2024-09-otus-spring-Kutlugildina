@@ -1,0 +1,60 @@
+databaseChangeLog:
+- changeSet:
+    id: 2025-02-01--0001-authors
+    author: dinara
+    context: test
+    runOnChange: true
+    loadData:
+      primaryKey: id
+      file: data/2025-02-01--0001-authors.csv
+      relativeToChangelogFile: true
+      separator: ;
+      quotChar: '"'
+      seperator: ';'
+      encoding: UTF-8
+      tableName: authors
+
+- changeSet:
+    id: 2025-02-01--0002-genres
+    author: dinara
+    context: test
+    runOnChange: true
+    loadData:
+      primaryKey: id
+      file: data/2025-02-01--0002-genres.csv
+      relativeToChangelogFile: true
+      separator: ;
+      quotChar: '"'
+      seperator: ';'
+      encoding: UTF-8
+      tableName: genres
+
+- changeSet:
+    id: 2025-02-01--0003-books
+    author: dinara
+    context: test
+    runOnChange: true
+    loadData:
+      primaryKey: id
+      file: data/2025-02-01--0003-books.csv
+      relativeToChangelogFile: true
+      separator: ;
+      quotChar: '"'
+      seperator: ';'
+      encoding: UTF-8
+      tableName: books
+
+- changeSet:
+    id: 2025-02-01--0004-books-genres
+    author: dinara
+    context: test
+    runOnChange: true
+    loadData:
+      primaryKey: book_id, genre_id
+      file: data/2025-02-01--0004-books-genres.csv
+      relativeToChangelogFile: true
+      separator: ;
+      quotChar: '"'
+      seperator: ';'
+      encoding: UTF-8
+      tableName: books_genres

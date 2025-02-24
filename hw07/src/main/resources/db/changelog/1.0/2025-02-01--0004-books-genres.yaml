@@ -1,0 +1,27 @@
+databaseChangeLog:
+- changeSet:
+    id: 2025-02-01--0004-books-genres
+    author: dinara
+    createTable:
+      tableName: books_genres
+      columns:
+      - column:
+          name: book_id
+          type: bigint
+          constraints:
+            nullable: false
+            foreignKeyName: fk_book_genres_books
+            references: books(id)
+            deleteCascade: true
+      - column:
+          name: genre_id
+          type: bigint
+          constraints:
+            nullable: false
+            foreignKeyName: fk_book_genres_genres
+            references: genres(id)
+            deleteCascade: true
+    addPrimaryKey:
+      tableName: books_genres
+      columnNames: book_id, genre_id
+      constraintName: pk_books_genres
