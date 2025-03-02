@@ -8,10 +8,8 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.mongodb.core.MongoOperations;
-import ru.otus.hw.events.CommentModelListener;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.sequencegenerator.SequenceGeneratorService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataMongoTest(
         includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = {CommentRepository.class, SequenceGeneratorService.class, CommentModelListener.class}),
+                classes = CommentRepository.class),
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {BookRepository.class, GenreRepository.class, CommentRepository.class}
@@ -34,13 +32,13 @@ public class MongoCommentRepositoryTest {
     @DisplayName("должен сохранять новый комментарий")
     @Test
     void shouldSaveNewComment() {
-        var book = mongoOperations.findById("1", Book.class);
+        var book = mongoOperations.findById("67c49395d3a28750b0cca8fe", Book.class);
         var expectedComment = new Comment(null, "BookCommentary_1", book);
 
         var returnedComment = commentRepository.save(expectedComment);
 
         assertThat(returnedComment).isNotNull()
-                .matches(comment -> StringUtils.isNumeric(comment.getId()))
+                .matches(comment -> StringUtils.isNotBlank(comment.getId()))
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
 
         assertThat(mongoOperations.findById(returnedComment.getId(), Comment.class)).isEqualTo(returnedComment);
@@ -49,13 +47,13 @@ public class MongoCommentRepositoryTest {
     @DisplayName("должен обновить комментарий по id")
     @Test
     void shouldUpdateCommentById() {
-        var book = mongoOperations.findById("1", Book.class);
-        var expectedComment = new Comment("1", "EditBookCommentary_1", book);
+        var book = mongoOperations.findById("67c49395d3a28750b0cca8fe", Book.class);
+        var expectedComment = new Comment("67c49395d3a28750b0cca8fh", "EditBookCommentary_1", book);
 
         var returnedComment = commentRepository.save(expectedComment);
 
         assertThat(returnedComment).isNotNull()
-                .matches(comment -> StringUtils.isNumeric(comment.getId()))
+                .matches(comment -> StringUtils.isNotBlank(comment.getId()))
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
 
         assertThat(mongoOperations.findById(returnedComment.getId(), Comment.class)).isEqualTo(returnedComment);
@@ -64,9 +62,9 @@ public class MongoCommentRepositoryTest {
     @DisplayName("должен загружать комментарий по id")
     @Test
     void shouldReturnCorrectCommentById() {
-        var expectedComment = mongoOperations.findById("1", Comment.class);
+        var expectedComment = mongoOperations.findById("67c49395d3a28750b0cca8fi", Comment.class);
 
-        var actualComment = commentRepository.findById("1");
+        var actualComment = commentRepository.findById("67c49395d3a28750b0cca8fi");
 
         assertThat(actualComment).isPresent()
                 .get()
@@ -76,7 +74,7 @@ public class MongoCommentRepositoryTest {
     @DisplayName("должен загружать список комментариев по id книги")
     @Test
     void shouldReturnCorrectCommentByBookId() {
-        var actualCommentList = commentRepository.findByBookId("3");
+        var actualCommentList = commentRepository.findByBookId("67c49395d3a28750b0cca8feg");
 
         var expectedCommentList = actualCommentList.stream()
                 .map(Comment::getId)
@@ -89,9 +87,9 @@ public class MongoCommentRepositoryTest {
     @DisplayName("должен удалить комментарий по id")
     @Test
     void shouldDeleteCommentById() {
-        commentRepository.deleteById("2");
+        commentRepository.deleteById("67c49395d3a28750b0cca8fm");
 
-        var expectedComment = mongoOperations.findById("2", Comment.class);
+        var expectedComment = mongoOperations.findById("67c49395d3a28750b0cca8fm", Comment.class);
         assertThat(expectedComment).isNull();
     }
 }

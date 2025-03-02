@@ -17,7 +17,6 @@ import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
-import ru.otus.hw.sequencegenerator.SequenceGeneratorService;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -35,8 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
                 classes = {
                         BookRepository.class, CommentRepository.class,
                         CommentServiceImpl.class, BookServiceImpl.class,
-                        AuthorRepository.class, GenreRepository.class,
-                        SequenceGeneratorService.class
+                        AuthorRepository.class, GenreRepository.class
                 }
         ))
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
@@ -87,7 +85,8 @@ public class IntegrationBookServiceImplTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var bookDto = bookService.insert("newTitle", "2", Set.of("2", "3"));
+        var bookDto = bookService.insert("newTitle", "67c49395d3a28750b0cca8fr",
+                Set.of("67c49395d3a28750b0cca8fn", "67c49395d3a28750b0cca8fa"));
         assertThat(bookDto.authorDto())
                 .isNotNull();
     }
@@ -95,7 +94,8 @@ public class IntegrationBookServiceImplTest {
     @DisplayName("должен сохранять измененную книгу")
     @Test
     void shouldSaveUpdatedBook() {
-        var bookDto = bookService.update("2","editTitle", "2", Set.of("2", "3"));
+        var bookDto = bookService.update("67c49395d3a28750b0cca8ff","editTitle", "67c49395d3a28750b0cca8fq",
+                Set.of("67c49395d3a28750b0cca8fn", "67c49395d3a28750b0cca8fb"));
 
         assertThat(bookDto).isNotNull()
                 .matches(book -> ObjectUtils.isNotEmpty(book.genreDtoList()))
@@ -109,21 +109,21 @@ public class IntegrationBookServiceImplTest {
     @DisplayName("должен удалять книгу по id ")
     @Test
     void shouldDeleteBook() {
-        bookService.deleteById("1");
+        bookService.deleteById("67c49395d3a28750b0cca8fe");
         var throwable = assertThrows(IllegalArgumentException.class,
-                () -> commentService.findByBookId("1"));
+                () -> commentService.findByBookId("67c49395d3a28750b0cca8fe"));
         assertThat(throwable)
                 .message()
-                .isEqualTo("Comments find by book_id [1] is field. Book is not found");
+                .isEqualTo("Comments find by book_id [67c49395d3a28750b0cca8fe] is field. Book is not found");
     }
 
     private static Stream<Arguments> getDbIdBooks() {
-        var commentDto1Book3 = new CommentDto("4", "Text_1");
-        var commentDto2Book3 = new CommentDto("5", "Text_2");
-        var commentDto3Book3 = new CommentDto("6", "Text_3");
+        var commentDto1Book3 = new CommentDto("67c49395d3a28750b0cca8fk", "Text_1");
+        var commentDto2Book3 = new CommentDto("67c49395d3a28750b0cca8fl", "Text_2");
+        var commentDto3Book3 = new CommentDto("67c49395d3a28750b0cca8fm", "Text_3");
         return Stream.of(
-                Arguments.of("2", Collections.emptyList()),
-                Arguments.of("3", new ArrayList<>(List.of(commentDto1Book3, commentDto2Book3, commentDto3Book3)))
+                Arguments.of("67c49395d3a28750b0cca8ff", Collections.emptyList()),
+                Arguments.of("67c49395d3a28750b0cca8feg", new ArrayList<>(List.of(commentDto1Book3, commentDto2Book3, commentDto3Book3)))
         );
     }
 }

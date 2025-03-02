@@ -7,12 +7,10 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.otus.hw.events.CommentModelListener;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
-import ru.otus.hw.sequencegenerator.SequenceGeneratorService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {
                         BookRepository.class, CommentRepository.class,
-                        CommentServiceImpl.class, BookServiceImpl.class,
-                        SequenceGeneratorService.class, CommentModelListener.class
+                        CommentServiceImpl.class, BookServiceImpl.class
                 }
         ),
         excludeFilters = @ComponentScan.Filter(
@@ -43,7 +40,7 @@ public class IntegrationCommentServiceImplTest {
     @DisplayName("должен сохранять новый комментарий")
     @Test
     void shouldSaveNewComment() {
-        var commentDto = commentService.insert("BookCommentary_1", "1");
+        var commentDto = commentService.insert("BookCommentary_1", "67c49395d3a28750b0cca8fe");
         assertThat(commentDto).isNotNull();
 
         var expectedCommentDto = commentService.findById(commentDto.id());
@@ -58,10 +55,9 @@ public class IntegrationCommentServiceImplTest {
     @DisplayName("должен обновить комментарий по id")
     @Test
     void shouldUpdateCommentById() {
-        var insertCommentDto = commentService.insert("BookCommentary_1", "1");
+        var insertCommentDto = commentService.insert("BookCommentary_1", "67c49395d3a28750b0cca8fe");
         assertThat(insertCommentDto).isNotNull();
-        System.out.println(commentService.findById("1"));
-        var updateCommentDto = commentService.update(insertCommentDto.id(), "EditBookCommentary_1", "1");
+        var updateCommentDto = commentService.update(insertCommentDto.id(), "EditBookCommentary_1", "67c49395d3a28750b0cca8fe");
         assertThat(updateCommentDto).isNotNull();
 
         var expectedCommentDto = commentService.findById(updateCommentDto.id());
@@ -76,7 +72,7 @@ public class IntegrationCommentServiceImplTest {
     @DisplayName("должен загружать комментарий по id")
     @Test
     void shouldReturnCorrectCommentById() {
-        var commentDto = commentService.insert("BookCommentary_1", "1");
+        var commentDto = commentService.insert("BookCommentary_1", "67c49395d3a28750b0cca8fe");
         assertThat(commentDto).isNotNull();
 
         var expectedCommentDto = commentService.findById(commentDto.id());
@@ -89,7 +85,7 @@ public class IntegrationCommentServiceImplTest {
     @DisplayName("должен загружать список комментариев по id книги")
     @Test
     void shouldReturnCorrectCommentByBookId() {
-        var bookDto = bookService.findById("1");
+        var bookDto = bookService.findById("67c49395d3a28750b0cca8fe");
         assertThat(bookDto).isPresent().isNotNull();
 
         var commentDto = commentService.insert("BookCommentary_5", bookDto.get().id());
@@ -103,7 +99,7 @@ public class IntegrationCommentServiceImplTest {
     @DisplayName("должен удалить комментарий по id")
     @Test
     void shouldDeleteCommentById() {
-        var commentDto = commentService.insert("BookCommentary_1", "1");
+        var commentDto = commentService.insert("BookCommentary_1", "67c49395d3a28750b0cca8feg");
         assertThat(commentDto).isNotNull();
 
         commentService.deleteById(commentDto.id());

@@ -11,6 +11,7 @@ import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.Optional;
@@ -28,6 +29,8 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
+
+    private final CommentRepository commentRepository;
 
     @Override
     public Optional<BookDto> findById(String id) {
@@ -56,8 +59,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto update(String id, String title, String authorId, Set<String> genresIds) {
-        if (!StringUtils.isNumeric(id)) {
-            throw new IllegalArgumentException("book id cannot be empty string or not numeric");
+        if (StringUtils.isBlank(id)) {
+            throw new IllegalArgumentException("book id cannot be empty string");
         }
         return save(id, title, authorId, genresIds);
     }
@@ -65,6 +68,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteById(String id) {
         bookRepository.deleteById(id);
+        commentRepository.deleteByBookId(id);
     }
 
     private BookDto save(String id, String title, String authorId, Set<String> genresIds) {

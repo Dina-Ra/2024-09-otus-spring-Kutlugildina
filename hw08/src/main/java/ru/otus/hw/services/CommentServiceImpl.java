@@ -3,7 +3,6 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
@@ -47,22 +46,19 @@ public class CommentServiceImpl implements CommentService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public CommentDto insert(String text, String bookId) {
         return save(null, text, bookId);
     }
 
-    @Transactional
     @Override
     public CommentDto update(String commentId, String text, String bookId) {
-        if (!StringUtils.isNumeric(commentId)) {
-            throw new IllegalArgumentException("commentId cannot be empty string or not numeric");
+        if (StringUtils.isBlank(commentId)) {
+            throw new IllegalArgumentException("commentId cannot be empty string");
         }
         return save(commentId, text, bookId);
     }
 
-    @Transactional
     @Override
     public void deleteById(String id) {
         commentRepository.deleteById(id);

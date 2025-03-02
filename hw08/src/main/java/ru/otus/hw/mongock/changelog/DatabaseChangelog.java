@@ -10,7 +10,6 @@ import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
-import ru.otus.hw.sequencegenerator.SequenceGeneratorService;
 
 import java.util.List;
 
@@ -25,28 +24,21 @@ public class DatabaseChangelog {
     @ChangeSet(order = "002", id = "insert", author = "dinara")
     public void insert(AuthorRepository authorRepository,
                        GenreRepository genreRepository,
-                       BookRepository bookRepository,
-                       SequenceGeneratorService sequenceGeneratorService) {
+                       BookRepository bookRepository) {
 
-        var author1 = authorRepository.insert(new Author("1", "Author_1"));
-        var author2 = authorRepository.insert(new Author("2", "Author_2"));
-        var author3 = authorRepository.insert(new Author("3", "Author_3"));
+        var author1 = authorRepository.insert(new Author(null, "Author_1"));
+        var author2 = authorRepository.insert(new Author(null, "Author_2"));
+        var author3 = authorRepository.insert(new Author(null, "Author_3"));
 
-        var genre1 = genreRepository.insert(new Genre("1", "Genre_1"));
-        var genre2 = genreRepository.insert(new Genre("2", "Genre_2"));
-        var genre3 = genreRepository.insert(new Genre("3", "Genre_3"));
-        var genre4 = genreRepository.insert(new Genre("4", "Genre_4"));
-        var genre5 = genreRepository.insert(new Genre("5", "Genre_5"));
-        var genre6 = genreRepository.insert(new Genre("6", "Genre_6"));
+        var genre1 = genreRepository.insert(new Genre(null, "Genre_1"));
+        var genre2 = genreRepository.insert(new Genre(null, "Genre_2"));
+        var genre3 = genreRepository.insert(new Genre(null, "Genre_3"));
+        var genre4 = genreRepository.insert(new Genre(null, "Genre_4"));
+        var genre5 = genreRepository.insert(new Genre(null, "Genre_5"));
+        var genre6 = genreRepository.insert(new Genre(null, "Genre_6"));
 
-        bookRepository.insert(new Book(
-                sequenceGeneratorService.generateSequence(Book.SEQUENCE_NAME),
-                "BookTitle_1", author1, List.of(genre1, genre2)));
-        bookRepository.insert(new Book(
-                sequenceGeneratorService.generateSequence(Book.SEQUENCE_NAME),
-                "BookTitle_2", author2, List.of(genre3, genre4)));
-        bookRepository.insert(new Book(
-                sequenceGeneratorService.generateSequence(Book.SEQUENCE_NAME),
-                "BookTitle_3", author3, List.of(genre5, genre6)));
+        bookRepository.insert(new Book(null, "BookTitle_1", author1, List.of(genre1, genre2)));
+        bookRepository.insert(new Book(null, "BookTitle_2", author2, List.of(genre3, genre4)));
+        bookRepository.insert(new Book(null, "BookTitle_3", author3, List.of(genre5, genre6)));
     }
 }
