@@ -15,8 +15,6 @@ import static java.util.Objects.nonNull;
 @NoArgsConstructor
 @Document("comments")
 public class Comment {
-    @Transient
-    public static final String SEQUENCE_NAME = "comments_sequence";
 
     @Id
     private String id;

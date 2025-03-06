@@ -19,9 +19,6 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 @Document("books")
 public class Book {
 
-    @Transient
-    public static final String SEQUENCE_NAME = "books_sequence";
-
     @Id
     private String id;
 
